@@ -138,4 +138,10 @@ public class Rectangle implements Drawable{
     public Point2D getP4() {
         return p4;
     }
+
+    public Point2D getCenter() { return p0; }
+
+    public void rotate(float theta) {
+        this.theta += theta;
+    }
 }

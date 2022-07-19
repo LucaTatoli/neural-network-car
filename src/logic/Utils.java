@@ -1,5 +1,6 @@
 package logic;
 
+import drawable.Line;
 import drawable.Point2D;
 import drawable.Rectangle;
 
@@ -31,6 +32,10 @@ public class Utils {
         intersection = new Point2D(Math.round(detX / det), Math.round(detY / det));
 
         return intersection;
+    }
+
+    public static Point2D lineLineIntersection(Line line1, Line line2) {
+        return lineLineIntersection(new Point2D(line1.getX1(), line1.getY1()), new Point2D(line1.getX2(), line1.getY2()), new Point2D(line2.getX1(), line2.getY1()), new Point2D(line2.getX2(), line2.getY2()));
     }
 
 
@@ -77,6 +82,10 @@ public class Utils {
             return true;
 
         return false;
+    }
+
+    public static boolean lineRectangleIntersection(Rectangle rect, Line line) {
+        return lineRectangleIntersection(rect, new Point2D(line.getX1(), line.getY1()), new Point2D(line.getX2(), line.getY2()));
     }
 
 }
