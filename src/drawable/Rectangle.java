@@ -1,102 +1,69 @@
 package drawable;
 
+import logic.Vector;
+
 import java.awt.*;
 
 public class Rectangle implements Drawable{
 
     private int width, height;
-    private Point2D p0, p1, p2, p3, p4;
-    private float theta = 0, alpha, diag;
+    private Point2D p0;
+    private Vector p1, p2, p3, p4;
     private Color c;
 
 
     public Rectangle(int px, int py, int width, int height) {
-        p0 = new Point2D(px + width/2, py + height/2);
-        p1 = new Point2D(px, py);
-        p2 = p1.add(width, 0);
-        p3 = p1.add(width, height);
-        p4 = p1.add(0, height);
-        this.width = width;
-        this.height = height;
-        c = Color.black;
-        diag = (int)Math.round(Math.sqrt(width*width+height*height)/2);
-        alpha = (float)Math.acos(width/2 / diag);
-    }
-
-    public Rectangle(int px, int py, int width, int height, Color c) {
-        p0 = new Point2D(px + width/2, py + height/2);
-        p1 = new Point2D(px, py);
-        p2 = p1.add(width, 0);
-        p3 = p1.add(width, height);
-        p4 = p1.add(0, height);
-        this.width = width;
-        this.height = height;
-        this.c = c;
-        diag = (int)Math.round(Math.sqrt(width*width+height*height)/2);
-        alpha = (float)Math.acos(width/2 / diag);
-    }
-
-    public Rectangle(int px, int py, int width, int height, float theta, Color c) {
-        p0 = new Point2D(px + width/2, py + height/2);
-        this.width = width;
-        this.height = height;
-        this.c = c;
-        this.theta = theta;
-        diag = (int)Math.round(Math.sqrt(width*width+height*height)/2);
-        alpha = (float)Math.acos(width/2 / diag);
-        calculatePoints();
+        setRectangle(px, py, width, height);
     }
 
     public Rectangle(int px, int py, int width, int height, float theta) {
-        p0 = new Point2D(px + width/2, py + height/2);
-        this.width = width;
-        this.height = height;
-        c = Color.black;
-        this.theta = theta;
-        diag = (float)Math.sqrt(width*width+height*height)/2;
-        alpha = (float)Math.acos(width/2 / diag);
-        calculatePoints();
+        setRectangle(px, py, width, height);
+        rotate(theta);
     }
 
-    private void calculatePoints() {
-        p1 = p0.add((int)Math.round(diag * Math.cos(Math.PI - alpha + theta)), (int)Math.round(diag * Math.sin(Math.PI - alpha + theta)));
-        p2 = p0.add((int)Math.round(diag * Math.cos(alpha + theta)), (int)Math.round(diag * Math.sin(alpha + theta)));
-        p3 = p0.add((int)Math.round(diag * Math.cos(-alpha + theta)), (int)Math.round(diag * Math.sin(-alpha + theta)));
-        p4 = p0.add((int)Math.round(diag * Math.cos(Math.PI + alpha + theta)), (int)Math.round(diag * Math.sin(Math.PI + alpha + theta)));
+    private void setRectangle(int px, int py, int width, int height) {
+        p0 = new Point2D(px, py);
+        p1 = new Vector(-width/2, -height/2);
+        p2 = new Vector( width/2, -height/2);
+        p3 = new Vector( width/2,  height/2);
+        p4 = new Vector(-width/2,  height/2);
+        c = Color.black;
     }
 
     @Override
     public void draw(Graphics2D g) {
         g.setColor(Color.BLUE);
-        int[] xPoints = {p1.getX(), p2.getX(), p3.getX(), p4.getX()};
-        int[] yPoints = {p1.getY(), p2.getY(), p3.getY(), p4.getY()};
+
+        int x1, x2, x3, x4, y1, y2, y3, y4;
+
+        x1 = Math.round(p0.getX() + p1.getX());
+        x2 = Math.round(p0.getX() + p2.getX());
+        x3 = Math.round(p0.getX() + p3.getX());
+        x4 = Math.round(p0.getX() + p4.getX());
+
+        y1 = Math.round(p0.getY() + p1.getY());
+        y2 = Math.round(p0.getY() + p2.getY());
+        y3 = Math.round(p0.getY() + p3.getY());
+        y4 = Math.round(p0.getY() + p4.getY());
+
+        int[] xPoints = {x1, x2, x3, x4};
+        int[] yPoints = {y1, y2, y3, y4};
         g.fillPolygon(xPoints, yPoints, 4);
 
         g.setColor(c);
-        g.drawLine(p1.getX(), p1.getY(), p2.getX(), p2.getY());
-        g.drawLine(p2.getX(), p2.getY(), p3.getX(), p3.getY());
-        g.drawLine(p3.getX(), p3.getY(), p4.getX(), p4.getY());
-        g.drawLine(p4.getX(), p4.getY(), p1.getX(), p1.getY());
+        g.drawLine(x1, y1, x2, y2);
+        g.drawLine(x2, y2, x3, y3);
+        g.drawLine(x3, y3, x4, y4);
+        g.drawLine(x4, y4, x1, y1);
     }
 
     @Override
     public void update() {
-        theta += 0.01f;
-        calculatePoints();
     }
 
     public void setPosition(int x, int y) {
         p0.setX(x);
         p0.setY(y);
-        calculatePoints();
-    }
-
-    public int getPx() {
-        return p1.getX();
-    }
-
-    public int getPy() {
-        return p1.getY();
     }
 
     public int getWidth() {
@@ -119,29 +86,32 @@ public class Rectangle implements Drawable{
         return c;
     }
 
-    public void setC(Color c) {
+    public void setColor(Color c) {
         this.c = c;
     }
 
     public Point2D getP1() {
-        return p1;
+        return p0.add(p1.getX(), p1.getY());
     }
 
     public Point2D getP2() {
-        return p2;
+        return p0.add(p2.getX(), p2.getY());
     }
 
     public Point2D getP3() {
-        return p3;
+        return p0.add(p3.getX(), p3.getY());
     }
 
     public Point2D getP4() {
-        return p4;
+        return p0.add(p4.getX(), p4.getY());
     }
 
     public Point2D getCenter() { return p0; }
 
     public void rotate(float theta) {
-        this.theta += theta;
+        p1.rotate(theta);
+        p2.rotate(theta);
+        p3.rotate(theta);
+        p4.rotate(theta);
     }
 }

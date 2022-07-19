@@ -35,7 +35,7 @@ public class Utils {
     }
 
     public static Point2D lineLineIntersection(Line line1, Line line2) {
-        return lineLineIntersection(new Point2D(line1.getX1(), line1.getY1()), new Point2D(line1.getX2(), line1.getY2()), new Point2D(line2.getX1(), line2.getY1()), new Point2D(line2.getX2(), line2.getY2()));
+        return lineLineIntersection(line1.getOrigin(), line1.getEnd(), line2.getOrigin(), line2.getEnd());
     }
 
 
@@ -85,7 +85,7 @@ public class Utils {
     }
 
     public static boolean lineRectangleIntersection(Rectangle rect, Line line) {
-        return lineRectangleIntersection(rect, new Point2D(line.getX1(), line.getY1()), new Point2D(line.getX2(), line.getY2()));
+        return lineRectangleIntersection(rect, line.getOrigin(), line.getEnd());
     }
 
 }

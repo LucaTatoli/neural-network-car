@@ -42,6 +42,14 @@ public class NeuralNetwork {
         for(int i = 0; i < middleLayer.length; i++)
             for(int j = 0; j < outputsLayer.length; j++)
                 outputsDiv += middleToOutput.get(new Point2D(i, j));
+
+
+//        System.out.println("============================");
+//
+//        for(int i = 0; i < inputsLayer.length; i++)
+//            System.out.println(inputsLayer[i]);
+//
+//        System.out.println("============================");
     }
 
     public float evaluateNeuron(NeuralNetworkLayer layer, int neuron) {

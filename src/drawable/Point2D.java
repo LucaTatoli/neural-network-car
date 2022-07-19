@@ -1,6 +1,10 @@
 package drawable;
 
-public class Point2D {
+import logic.Vector;
+
+import java.awt.*;
+
+public class Point2D implements Drawable {
 
     private float x, y;
     private float theta = 0;
@@ -10,6 +14,12 @@ public class Point2D {
         this.y = y;
         double mag = Math.sqrt(x*x + y*y);
         theta = (float)Math.acos(x/mag);
+    }
+
+    public Point2D(float x, float y, float theta) {
+        this.x = x;
+        this.y = y;
+        this.theta = theta;
     }
 
     public int getX() {
@@ -28,23 +38,20 @@ public class Point2D {
         this.y = y;
     }
 
-    public Point2D add(int x, int y) {
+    public Point2D add(float x, float y) {
         return new Point2D(this.x + x, this.y + y);
     }
 
-    public Point2D mult(float amount) {
-        x *= amount;
-        y *= amount;
-        return new Point2D(x, y);
+    public Point2D add(Point2D p) {
+        return new Point2D(this.x + p.getX(), this.y + p.getY());
     }
 
-    public Point2D turn(float amount) {
-        double mag = Math.sqrt(x*x + y*y);
-        x = (float)(mag * Math.cos(theta + amount));
-        y = (float)(mag * Math.sin(theta + amount));
-        theta += amount;
-        System.out.println(theta);
-        return new Point2D(x, y);
+    public Point2D sub(float x, float y) {
+        return new Point2D(this.x - x, this.getY() - y);
+    }
+
+    public Point2D sub(Point2D p) {
+        return new Point2D(this.x - p.getX(), this.getY() - p.getY());
     }
 
     @Override
@@ -65,5 +72,15 @@ public class Point2D {
     @Override
     public String toString() {
         return "("+x+", " +y+")";
+    }
+
+    @Override
+    public void draw(Graphics2D g) {
+        g.drawArc(Math.round(x), Math.round(y), 5, 5, 0, 360);
+    }
+
+    @Override
+    public void update() {
+
     }
 }
